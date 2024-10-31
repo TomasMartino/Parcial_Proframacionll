@@ -2,14 +2,15 @@
 
 
 
-$(document).ready(function() {
-	alert("golamunado");
-  cargarUsuarios();
-  	
-  $('#usuarios').DataTable();
-});
+	$(document).ready(function() {
+		
+	  cargarUsuarios();
+	  	
+	  $('#usuarios').DataTable();
+	});
 
 async function cargarUsuarios() {
+	
 	const response = await fetch('api/usuario', {
 		method : "GET",
 		headers : {
@@ -17,6 +18,7 @@ async function cargarUsuarios() {
 			'Content-Type' : 'application/json'
 		},
 	});
+	
     const usuarios = await response.json() ;
     
     
@@ -27,7 +29,7 @@ async function cargarUsuarios() {
     for (let usuario of usuarios) {
 		
 		let botonEliminar = `
-		<a href="#" class="btn btn-danger btn-circle btn-sm">
+		<a href="#" onclick="eliminarUsuario(${usuario.id})" class="btn btn-danger btn-circle btn-sm">
 			<i class="fas fa-trash"></i>
 		</a>
 		`;
@@ -48,3 +50,20 @@ async function cargarUsuarios() {
 	
 	document.querySelector('#usuarios tbody').outerHTML=listadoHTML;
 }
+
+async function eliminarUsuario(id){
+		
+		if(!confirm('Desea eliminar usuario?')){
+			return;
+		}
+		const response = await fetch('api/usuario/' +id, {
+			method : 'DELETE',
+			headers : {
+				'Accept' : 'application/json',
+				'Content-Type' : 'application/json'
+		},
+	});
+	location.reload();
+}
+
+
