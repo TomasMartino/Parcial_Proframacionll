@@ -2,6 +2,8 @@ package com.proyecto_BD.parcial.Controllers;
 
 import com.proyecto_BD.parcial.Dao.UsuarioDao;
 import com.proyecto_BD.parcial.models.Usuario;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,7 +49,10 @@ public class UsuarioController {
 	    }
 	    @RequestMapping(value = "api/usuario", method=RequestMethod.POST)
 	    public void registrarUsuario(@RequestBody Usuario usuario){
-	        
+			Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+
+			String pass_hasheado=argon2.hash(1, 1024, 1, usuario.getPassword());
+			usuario.setPassword(pass_hasheado);
 	    	 usuarioDao.registrar(usuario);
 	    }
 
